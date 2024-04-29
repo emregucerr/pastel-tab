@@ -6,72 +6,23 @@ var speed;
 var looping = false;
 var lightness = "95%";
 
-$(document).ready(function() {
-
-  //setup copy
-  clip = new Clipboard('#text');
-
-  changeColor();
-
-  //default values
-  auto = false;
-  speed = 3;
-
-  //setup stored variables
-  chrome.storage.sync.get('auto', function(data) {
-    auto = data.auto || auto;
-    updateButtons();
-  });
-
-  chrome.storage.sync.get('speed', function(data) {
-    speed = data.speed || speed;
-    updateButtons();
-  })
-
-  $('#gen').click(function(e) {
-    e.preventDefault();
-    if (!auto) {
-      if (!looping) {
-        changeColor(); //if it's on manual, just change
-      }
-    } else {
-      if (speed == 5) { //max speed value
-        speed = 0;
-      }
-      speed++;
-      setSpeedBars();
-      setValues();
-    }
-  });
-
-  $('#tog').click(function(e) {
-    e.preventDefault();
-    auto = !auto; //invert auto
-    setValues(); //save values to Chrome
-    updateButtons();
-  });
-
-  clip.on('success', function(e) { //on finish copy
-    $('#text').addClass('copied');
-  });
-
-  $('#clock-tog').click(function(e) {
-    e.preventDefault();
-    $('#clock').toggleClass('hide');
-  });
-
-  clock();
+document.addEventListener('DOMContentLoaded', function() {
+    setupCopy();
+    setDefaultValues();
+    setupStoredVariables();
+    handleEvents();
+    clock();
 });
 
 function clock() {
-  $('#clock').html(moment().format('h:mm A'));
+  document.querySelector('#clock').innerHTML = moment().format('h:mm A');
   setTimeout(function() { clock(); }, 500);
 }
 
 function updateButtons() {
   if (!auto) {
-    $('#auto-check').html('');
-    $('#gen').html('generate');
+    document.querySelector('#auto-check').innerHTML = '';
+    document.querySelector('#gen').innerHTML = 'generate';
   } else {
     $('#auto-check').html('check');
 
@@ -102,8 +53,8 @@ function changeColor() {
   $('body').css('background-color', 'hsl(' + col + ', 100%, ' + lightness + ')'); //set color
 
   hex = '#' + tinycolor('hsl(' + col + ', 100%, ' + lightness + ')').toHex(); //translate to hex
-  $('#text').html(hex); //set text
-  $('#text').removeClass('copied'); //clear ' - copied'
+  document.querySelector('#text').innerHTML = hex; //set text
+  document.querySelector('#text').classList.remove('copied');
 
   //auto-generate colors is option is enabled
   if (auto) {
