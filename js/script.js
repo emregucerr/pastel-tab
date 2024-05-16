@@ -6,7 +6,7 @@ var speed;
 var looping = false;
 var lightness = "95%";
 
-$(document).ready(function() {
+document.addEventListener('DOMContentLoaded', function() {
 
   //setup copy
   clip = new Clipboard('#text');
@@ -28,7 +28,7 @@ $(document).ready(function() {
     updateButtons();
   })
 
-  $('#gen').click(function(e) {
+  document.getElementById('gen').addEventListener('click', function(e) {
     e.preventDefault();
     if (!auto) {
       if (!looping) {
@@ -44,7 +44,7 @@ $(document).ready(function() {
     }
   });
 
-  $('#tog').click(function(e) {
+  document.getElementById('tog').addEventListener('click', function(e) {
     e.preventDefault();
     auto = !auto; //invert auto
     setValues(); //save values to Chrome
@@ -52,12 +52,17 @@ $(document).ready(function() {
   });
 
   clip.on('success', function(e) { //on finish copy
-    $('#text').addClass('copied');
+    document.getElementById('text').classList.add('copied');
   });
 
-  $('#clock-tog').click(function(e) {
+  document.getElementById('clock-tog').addEventListener('click', function(e) {
     e.preventDefault();
-    $('#clock').toggleClass('hide');
+    var clockElement = document.getElementById('clock');
+    if (clockElement.classList.contains('hide')) {
+      clockElement.classList.remove('hide');
+    } else {
+      clockElement.classList.add('hide');
+    }
   });
 
   clock();
